@@ -27,5 +27,3 @@ This demo showcases three key properties of the Cupertino pickers:
 ## Screenshot
 
 ![Focus Session UI](assets/screenshot.png)
-
-*Capture a screenshot after running the app and save it as `assets/screenshot.png` to display the final UI here.*
