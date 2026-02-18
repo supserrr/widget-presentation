@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-void main() {
-  runApp(const FocusSessionApp());
-}
+void main() => runApp(const FocusSessionApp());
 
-/// Root Cupertino-style app for the focus session demo.
 class FocusSessionApp extends StatelessWidget {
   const FocusSessionApp({super.key});
 
@@ -18,7 +15,6 @@ class FocusSessionApp extends StatelessWidget {
   }
 }
 
-/// Main page: schedule a focus session by picking a date and duration.
 class FocusSessionPage extends StatefulWidget {
   const FocusSessionPage({super.key});
 
@@ -27,12 +23,10 @@ class FocusSessionPage extends StatefulWidget {
 }
 
 class _FocusSessionPageState extends State<FocusSessionPage> {
-  // State: selected date for the session and duration in minutes/seconds.
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
   Duration _selectedDuration = const Duration(minutes: 25);
   String? _confirmationMessage;
 
-  /// Format the selected date for display (e.g., "Tue, Feb 17").
   String get _formattedDate {
     const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -41,7 +35,6 @@ class _FocusSessionPageState extends State<FocusSessionPage> {
     return '$w, $m ${_selectedDate.day}';
   }
 
-  /// Format the selected duration for display (e.g., "25 min" or "1 h 30 min").
   String get _formattedDuration {
     final minutes = _selectedDuration.inMinutes;
     final seconds = _selectedDuration.inSeconds % 60;
@@ -55,93 +48,65 @@ class _FocusSessionPageState extends State<FocusSessionPage> {
     return '$minutes min';
   }
 
-  /// Show a bottom sheet with CupertinoDatePicker.
-  /// Highlighted attribute: mode (date vs dateAndTime) and initialDateTime.
+  Widget _pickerBar() => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CupertinoButton(child: const Text('Cancel'), onPressed: () => Navigator.of(context).pop()),
+          CupertinoButton(child: const Text('Done'), onPressed: () => Navigator.of(context).pop()),
+        ],
+      );
+
   void _showDatePicker() {
     showCupertinoModalPopup<void>(
       context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 250,
-          color: CupertinoColors.systemBackground.resolveFrom(context),
-          child: SafeArea(
-            top: false,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CupertinoButton(
-                      child: const Text('Cancel'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    CupertinoButton(
-                      child: const Text('Done'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
+      builder: (context) => Container(
+        height: 250,
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              _pickerBar(),
+              Expanded(
+                child: CupertinoDatePicker(
+                  // [ATTR 1] mode: default dateAndTime; we use date (date-only).
+                  mode: CupertinoDatePickerMode.date,
+                  // [ATTR 2] initialDateTime: default now; we use _selectedDate.
+                  initialDateTime: _selectedDate,
+                  minimumDate: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+                  onDateTimeChanged: (v) => setState(() => _selectedDate = v),
                 ),
-                Expanded(
-                  child: CupertinoDatePicker(
-                    // Attribute 1: mode - default is dateAndTime; we use date for session day only.
-                    mode: CupertinoDatePickerMode.date,
-                    // Attribute 2: initialDateTime - default is now; we use selected date.
-                    initialDateTime: _selectedDate,
-                    minimumDate: DateTime.now(),
-                    onDateTimeChanged: (DateTime value) {
-                      setState(() => _selectedDate = value);
-                    },
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
-  /// Show a bottom sheet with CupertinoTimerPicker.
-  /// Highlighted attribute: minuteInterval.
   void _showDurationPicker() {
     showCupertinoModalPopup<void>(
       context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 250,
-          color: CupertinoColors.systemBackground.resolveFrom(context),
-          child: SafeArea(
-            top: false,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CupertinoButton(
-                      child: const Text('Cancel'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    CupertinoButton(
-                      child: const Text('Done'),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ],
+      builder: (context) => Container(
+        height: 250,
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              _pickerBar(),
+              Expanded(
+                child: CupertinoTimerPicker(
+                  // [ATTR 3] minuteInterval: default 1; we use 5 for presets.
+                  minuteInterval: 5,
+                  initialTimerDuration: _selectedDuration,
+                  onTimerDurationChanged: (v) => setState(() => _selectedDuration = v),
                 ),
-                Expanded(
-                  child: CupertinoTimerPicker(
-                    // Attribute 3: minuteInterval - default is 1; we use 5 for focus session presets.
-                    minuteInterval: 5,
-                    initialTimerDuration: _selectedDuration,
-                    onTimerDurationChanged: (Duration value) {
-                      setState(() => _selectedDuration = value);
-                    },
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
