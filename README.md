@@ -1,6 +1,6 @@
-# Widget Presentation — Cupertino Pickers
+# Widgets Presentation - Cupertino Pickers.
 
-A tiny Flutter demo showing how to schedule a focus session using Cupertino date and timer pickers.
+A very small Flutter application that demonstrates how to schedule a focus session with Cupertino date and timer pickers.
 
 ## Run instructions
 
@@ -14,9 +14,9 @@ flutter run
 
 Tested on iOS simulator and Android emulator.
 
-## Widget attributes (demo highlights)
+## Widget attributes
 
-This demo showcases three key properties of the Cupertino pickers:
+There are three important attributes of the Cupertino pickers demonstrated in this demo:
 
 - **`CupertinoDatePicker.mode`** — Default is `CupertinoDatePickerMode.dateAndTime`. We use `CupertinoDatePickerMode.date` so the picker shows only month/day/year. Changing to `.dateAndTime` adds a time column; use `.date` when you only need a session day (e.g. booking, reminders).
 
